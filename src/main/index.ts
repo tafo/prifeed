@@ -2,7 +2,16 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { initDb, createPost, listPosts, deletePost, updatePost } from './db'
+import {
+  initDb,
+  createPost,
+  listPosts,
+  deletePost,
+  updatePost,
+  createComment,
+  deleteComment,
+  updateComment
+} from './db'
 
 function createWindow(): void {
   // Create the browser window.
@@ -11,7 +20,7 @@ function createWindow(): void {
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    ...(process.platform !== 'darwin' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -41,7 +50,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
+  electronApp.setAppUserModelId('com.prifeed.app')
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -56,6 +65,11 @@ app.whenReady().then(() => {
   ipcMain.handle('posts:list', () => listPosts())
   ipcMain.handle('posts:delete', (_, id: string) => deletePost(id))
   ipcMain.handle('posts:update', (_, id: string, body: string) => updatePost(id, body))
+  ipcMain.handle('comments:create', (_, postId: string, body: string) =>
+    createComment(postId, body)
+  )
+  ipcMain.handle('comments:delete', (_, id: string) => deleteComment(id))
+  ipcMain.handle('comments:update', (_, id: string, body: string) => updateComment(id, body))
 
   createWindow()
 
