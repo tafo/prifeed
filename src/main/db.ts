@@ -82,7 +82,7 @@ export function listPosts(): PostWithComments[] {
     .prepare('SELECT * FROM posts ORDER BY created_at DESC')
     .all() as Post[]
   const comments = db
-    .prepare('SELECT * FROM comments ORDER BY created_at ASC')
+    .prepare('SELECT * FROM comments ORDER BY created_at DESC')
     .all() as Comment[]
   const byPost = new Map<string, Comment[]>()
   for (const c of comments) {

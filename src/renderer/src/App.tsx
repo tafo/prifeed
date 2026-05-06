@@ -1,13 +1,17 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { PostWithComments } from '@renderer/types'
 import { type Filter, getFilterCutoff } from '@renderer/lib/time'
 import { Sidebar } from '@renderer/components/Sidebar'
-import { PostComposer } from '@renderer/components/PostComposer'
 import { PostCard } from '@renderer/components/PostCard'
+import { ThreadPanel } from '@renderer/components/ThreadPanel'
+import { ComposeModal } from '@renderer/components/ComposeModal'
 
 function App(): React.JSX.Element {
   const [posts, setPosts] = useState<PostWithComments[]>([])
   const [filter, setFilter] = useState<Filter>('all')
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [composerOpen, setComposerOpen] = useState(false)
+  const initialized = useRef(false)
 
   async function refresh(): Promise<void> {
     setPosts(await window.api.posts.list())
@@ -15,6 +19,30 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     refresh()
+  }, [])
+
+  useEffect(() => {
+    if (selectedId && !posts.some((p) => p.id === selectedId)) {
+      setSelectedId(null)
+    }
+  }, [posts, selectedId])
+
+  useEffect(() => {
+    if (!initialized.current && posts.length > 0) {
+      initialized.current = true
+      setSelectedId(posts[0].id)
+    }
+  }, [posts])
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent): void {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'n') {
+        e.preventDefault()
+        setComposerOpen(true)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
   }, [])
 
   const counts = useMemo(() => {
@@ -34,14 +62,22 @@ function App(): React.JSX.Element {
     return posts.filter((p) => p.created_at >= cutoff)
   }, [posts, filter])
 
+  const selectedPost = useMemo(
+    () => posts.find((p) => p.id === selectedId) ?? null,
+    [posts, selectedId]
+  )
+
   return (
     <div className="flex min-h-screen bg-bg">
-      <Sidebar filter={filter} counts={counts} onFilterChange={setFilter} />
+      <Sidebar
+        filter={filter}
+        counts={counts}
+        onFilterChange={setFilter}
+        onNewEntry={() => setComposerOpen(true)}
+      />
 
-      <main className="flex-1 bg-bg">
-        <div className="mx-auto max-w-2xl px-6 py-10">
-          <PostComposer onPosted={refresh} />
-
+      <main className="min-w-0 flex-1 bg-bg">
+        <div className="mx-auto max-w-3xl px-6 py-10">
           <section className="space-y-3">
             {visiblePosts.length === 0 && (
               <p className="py-8 text-center text-sm text-text-faint">
@@ -49,11 +85,30 @@ function App(): React.JSX.Element {
               </p>
             )}
             {visiblePosts.map((post) => (
-              <PostCard key={post.id} post={post} onChange={refresh} />
+              <PostCard
+                key={post.id}
+                post={post}
+                selected={selectedId === post.id}
+                onSelect={setSelectedId}
+              />
             ))}
           </section>
         </div>
       </main>
+
+      {selectedPost && (
+        <ThreadPanel
+          post={selectedPost}
+          onChange={refresh}
+          onClose={() => setSelectedId(null)}
+        />
+      )}
+
+      <ComposeModal
+        open={composerOpen}
+        onClose={() => setComposerOpen(false)}
+        onPosted={refresh}
+      />
     </div>
   )
 }

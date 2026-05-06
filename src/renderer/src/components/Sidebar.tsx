@@ -1,3 +1,4 @@
+import { PencilSquareIcon } from '@heroicons/react/16/solid'
 import { Logo } from '@renderer/components/Logo'
 import { ThemeToggle } from '@renderer/components/ThemeToggle'
 import type { Filter } from '@renderer/lib/time'
@@ -13,6 +14,7 @@ interface SidebarProps {
   filter: Filter
   counts: Counts
   onFilterChange: (f: Filter) => void
+  onNewEntry: () => void
 }
 
 interface FilterItemProps {
@@ -41,7 +43,8 @@ function FilterItem({ label, count, active, onClick }: FilterItemProps): React.J
 export function Sidebar({
   filter,
   counts,
-  onFilterChange
+  onFilterChange,
+  onNewEntry
 }: SidebarProps): React.JSX.Element {
   return (
     <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-border bg-bg">
@@ -50,7 +53,20 @@ export function Sidebar({
         <span className="text-base font-semibold text-text">Prifeed</span>
       </div>
 
-      <nav className="flex flex-col gap-0.5 px-2 pt-2">
+      <div className="px-2">
+        <button
+          onClick={onNewEntry}
+          className="flex w-full items-center justify-between rounded-md bg-accent px-2.5 py-1.5 text-sm font-semibold text-white shadow-inner shadow-white/15 transition-colors hover:bg-accent-hover"
+        >
+          <span className="flex items-center gap-2">
+            <PencilSquareIcon className="size-4" />
+            New entry
+          </span>
+          <span className="font-mono text-[10px] text-white/70">⌘N</span>
+        </button>
+      </div>
+
+      <nav className="mt-3 flex flex-col gap-0.5 px-2">
         <FilterItem
           label="All"
           count={counts.all}
