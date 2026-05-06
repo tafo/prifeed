@@ -11,7 +11,8 @@ export interface Post {
 const api = {
   posts: {
     create: (body: string): Promise<Post> => ipcRenderer.invoke('posts:create', body),
-    list: (): Promise<Post[]> => ipcRenderer.invoke('posts:list')
+    list: (): Promise<Post[]> => ipcRenderer.invoke('posts:list'),
+    delete: (id: string): Promise<void> => ipcRenderer.invoke('posts:delete', id)
   }
 }
 

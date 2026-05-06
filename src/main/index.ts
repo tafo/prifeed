@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { initDb, createPost, listPosts } from './db'
+import { initDb, createPost, listPosts, deletePost } from './db'
 
 function createWindow(): void {
   // Create the browser window.
@@ -54,6 +54,7 @@ app.whenReady().then(() => {
 
   ipcMain.handle('posts:create', (_, body: string) => createPost(body))
   ipcMain.handle('posts:list', () => listPosts())
+  ipcMain.handle('posts:delete', (_, id: string) => deletePost(id))
 
   createWindow()
 

@@ -63,6 +63,14 @@ function App(): React.JSX.Element {
     }
   }
 
+  async function handleDelete(post: Post): Promise<void> {
+    const preview = post.body.length > 60 ? post.body.slice(0, 60) + '...' : post.body
+    const ok = window.confirm(`Delete this entry?\n\n"${preview}"\n\nThis cannot be undone.`)
+    if (!ok) return
+    await window.api.posts.delete(post.id)
+    await refresh()
+  }
+
   return (
     <div className="min-h-full bg-bg">
       <header className="sticky top-0 z-10 border-b border-border bg-bg/90 backdrop-blur">
@@ -121,7 +129,9 @@ function App(): React.JSX.Element {
               <div className="mt-3 flex gap-4 text-[12px] text-text-muted">
                 <button className="hover:text-accent">Like</button>
                 <button className="hover:text-accent">Comment</button>
-                <button className="hover:text-accent">Edit</button>
+                <button onClick={() => handleDelete(post)} className="hover:text-red-400">
+                  Delete
+                </button>
               </div>
             </article>
           ))}

@@ -53,3 +53,7 @@ export function createPost(body: string): Post {
 export function listPosts(): Post[] {
   return db.prepare('SELECT * FROM posts ORDER BY created_at DESC').all() as Post[]
 }
+
+export function deletePost(id: string): void {
+  db.prepare('DELETE FROM posts WHERE id = ?').run(id)
+}
