@@ -125,6 +125,7 @@ function App(): React.JSX.Element {
               onKeyDown={handleKeyDown}
               placeholder="What's on your mind?"
               rows={3}
+              spellCheck={false}
               className="w-full resize-none bg-transparent px-4 py-3 text-[15px] leading-relaxed text-text placeholder:text-text-faint focus:outline-none"
             />
             <div className="flex items-center justify-between border-t border-border px-3 py-2">
@@ -176,6 +177,7 @@ function App(): React.JSX.Element {
                       onChange={(e) => setEditBody(e.target.value)}
                       onKeyDown={(e) => handleEditKeyDown(e, post)}
                       rows={Math.max(3, editBody.split('\n').length)}
+                      spellCheck={false}
                       className="w-full resize-none rounded-sm border border-border bg-elevated px-3 py-2 text-[15px] leading-relaxed text-text focus:border-border-strong focus:outline-none"
                     />
                     <div className="mt-2 flex items-center justify-between">
