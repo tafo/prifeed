@@ -42,7 +42,7 @@ function App(): React.JSX.Element {
         <div className="mx-auto max-w-2xl px-6 py-10">
           <PostComposer onPosted={refresh} />
 
-          <section className="space-y-4">
+          <section className="space-y-3">
             {visiblePosts.length === 0 && (
               <p className="py-8 text-center text-sm text-text-faint">
                 {posts.length === 0 ? 'No entries yet.' : 'Nothing in this range.'}

@@ -25,6 +25,7 @@
     "@electron-toolkit/utils": "^4.0.0",
     "@fontsource-variable/geist": "^5.2.8",
     "@fontsource-variable/geist-mono": "^5.2.7",
+    "@headlessui/react": "^2.2.10",
     "better-sqlite3": "^12.9.0",
     "electron-updater": "^6.3.9"
   },
