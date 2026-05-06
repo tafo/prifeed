@@ -57,3 +57,7 @@ export function listPosts(): Post[] {
 export function deletePost(id: string): void {
   db.prepare('DELETE FROM posts WHERE id = ?').run(id)
 }
+
+export function updatePost(id: string, body: string): void {
+  db.prepare('UPDATE posts SET body = ?, updated_at = ? WHERE id = ?').run(body, Date.now(), id)
+}
