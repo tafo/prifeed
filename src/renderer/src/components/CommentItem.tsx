@@ -55,12 +55,13 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
       <div>
         <Textarea
           autoFocus
+          aria-label="Edit comment body"
           value={editBody}
           onChange={(e) => setEditBody(e.target.value)}
           onKeyDown={handleKeyDown}
           rows={Math.max(2, editBody.split('\n').length)}
           spellCheck={false}
-          className="w-full resize-none rounded-2xl border border-border bg-elevated px-3.5 py-2 text-[14px] leading-snug text-text focus:border-border-strong focus:outline-none"
+          className="w-full resize-none rounded-2xl border-none bg-elevated px-3.5 py-2 text-[14px] leading-snug text-text focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-focus-ring"
         />
         <div className="ml-3.5 mt-1 flex items-center gap-2 text-[11px] text-text-faint">
           <span className="font-mono">⌘ + Enter · Esc</span>
@@ -72,7 +73,7 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
           <button
             onClick={saveEdit}
             disabled={!editBody.trim() || editBody.trim() === comment.body}
-            className="text-accent hover:text-accent-hover disabled:cursor-not-allowed disabled:opacity-30"
+            className="rounded bg-accent px-2 py-0.5 text-[11px] font-semibold text-white shadow-inner shadow-white/15 hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-30"
           >
             Save
           </button>

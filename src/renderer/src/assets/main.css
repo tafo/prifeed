@@ -7,43 +7,49 @@
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, monospace;
 
-  /* Defaults — overridden at runtime by .light or .dark on <html> */
-  --color-bg: #21252b;
-  --color-surface: #282c34;
-  --color-elevated: #2c313a;
-  --color-border: #3a3f4b;
-  --color-border-strong: #4b5263;
-  --color-text: #abb2bf;
-  --color-text-muted: #7f848e;
-  --color-text-faint: #545862;
-  --color-accent: #61afef;
-  --color-accent-hover: #82c0ff;
+  /* Defaults — overridden at runtime by .light or .dark on <html> (Phoenix dark) */
+  --color-bg: #0f111a;
+  --color-surface: #141824;
+  --color-elevated: #222834;
+  --color-border: #373e53;
+  --color-border-strong: #3e465b;
+  --color-text: #9fa6bc;
+  --color-text-emphasis: #eff2f6;
+  --color-text-muted: #8a94ad;
+  --color-text-faint: #606981;
+  --color-accent: #85a9ff;
+  --color-accent-hover: #6090ff;
+  --color-focus-ring: rgba(133, 169, 255, 0.4);
 }
 
 .dark {
-  --color-bg: #21252b;
-  --color-surface: #282c34;
-  --color-elevated: #2c313a;
-  --color-border: #3a3f4b;
-  --color-border-strong: #4b5263;
-  --color-text: #abb2bf;
-  --color-text-muted: #7f848e;
-  --color-text-faint: #545862;
-  --color-accent: #61afef;
-  --color-accent-hover: #82c0ff;
+  --color-bg: #0f111a;
+  --color-surface: #141824;
+  --color-elevated: #222834;
+  --color-border: #373e53;
+  --color-border-strong: #3e465b;
+  --color-text: #9fa6bc;
+  --color-text-emphasis: #eff2f6;
+  --color-text-muted: #8a94ad;
+  --color-text-faint: #606981;
+  --color-accent: #85a9ff;
+  --color-accent-hover: #6090ff;
+  --color-focus-ring: rgba(133, 169, 255, 0.4);
 }
 
 .light {
-  --color-bg: #fafafa;
+  --color-bg: #f5f7fa;
   --color-surface: #ffffff;
-  --color-elevated: #f3f4f6;
-  --color-border: #e5e7eb;
-  --color-border-strong: #d1d5db;
-  --color-text: #24292f;
-  --color-text-muted: #57606a;
-  --color-text-faint: #8c959f;
-  --color-accent: #0969da;
-  --color-accent-hover: #0860c4;
+  --color-elevated: #eff2f6;
+  --color-border: #cbd0dd;
+  --color-border-strong: #9fa6bc;
+  --color-text: #525b75;
+  --color-text-emphasis: #141824;
+  --color-text-muted: #6e7891;
+  --color-text-faint: #8a94ad;
+  --color-accent: #3874ff;
+  --color-accent-hover: #004dff;
+  --color-focus-ring: rgba(56, 116, 255, 0.35);
 }
 
 html,

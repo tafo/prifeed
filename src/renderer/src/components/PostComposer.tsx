@@ -33,7 +33,7 @@ export function PostComposer({ onPosted }: PostComposerProps): React.JSX.Element
 
   return (
     <section className="mb-6">
-      <div className="rounded-md border border-border bg-surface transition-colors focus-within:border-border-strong">
+      <div className="rounded-xl border border-border bg-surface transition-colors focus-within:border-border-strong">
         <Textarea
           ref={textareaRef}
           value={draft}
@@ -49,7 +49,7 @@ export function PostComposer({ onPosted }: PostComposerProps): React.JSX.Element
           <button
             onClick={submit}
             disabled={submitting || !draft.trim()}
-            className="rounded-md bg-accent px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-30"
+            className="rounded-md bg-accent px-3 py-1 text-xs font-semibold text-white shadow-inner shadow-white/15 transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-30"
           >
             Post
           </button>
