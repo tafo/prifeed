@@ -11,8 +11,6 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
   const [editing, setEditing] = useState(false)
   const [editBody, setEditBody] = useState('')
 
-  const wasEdited = comment.updated_at > comment.created_at
-
   function startEdit(): void {
     setEditing(true)
     setEditBody(comment.body)
@@ -84,21 +82,19 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
 
   return (
     <div className="group">
+      <div className="mb-1 ml-3.5 font-mono text-[11px] text-text-faint">
+        {formatTime(comment.created_at)}
+      </div>
       <div className="inline-block max-w-full rounded-2xl bg-elevated px-3.5 py-2">
         <p className="whitespace-pre-wrap text-[14px] leading-snug text-text">
           {comment.body}
         </p>
       </div>
-      <div className="ml-3.5 mt-1 flex items-center gap-2 text-[11px] text-text-faint">
-        <span className="font-mono">{formatTime(comment.created_at)}</span>
-        {wasEdited && <span title={`Edited ${formatTime(comment.updated_at)}`}>· edited</span>}
-        <span>·</span>
-        <button className="hover:text-accent">Like</button>
-        <span>·</span>
+      <div className="ml-3.5 mt-1 flex items-center gap-2 text-[11px] text-text-muted">
         <button onClick={startEdit} className="hover:text-accent">
           Edit
         </button>
-        <span>·</span>
+        <span className="text-text-faint">·</span>
         <button
           onClick={handleDelete}
           className="opacity-60 transition-opacity hover:text-red-400 group-hover:opacity-100"

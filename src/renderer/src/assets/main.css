@@ -7,6 +7,7 @@
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, monospace;
 
+  /* Defaults — overridden at runtime by .light or .dark on <html> */
   --color-bg: #21252b;
   --color-surface: #282c34;
   --color-elevated: #2c313a;
@@ -17,6 +18,32 @@
   --color-text-faint: #545862;
   --color-accent: #61afef;
   --color-accent-hover: #82c0ff;
+}
+
+.dark {
+  --color-bg: #21252b;
+  --color-surface: #282c34;
+  --color-elevated: #2c313a;
+  --color-border: #3a3f4b;
+  --color-border-strong: #4b5263;
+  --color-text: #abb2bf;
+  --color-text-muted: #7f848e;
+  --color-text-faint: #545862;
+  --color-accent: #61afef;
+  --color-accent-hover: #82c0ff;
+}
+
+.light {
+  --color-bg: #fafafa;
+  --color-surface: #ffffff;
+  --color-elevated: #f3f4f6;
+  --color-border: #e5e7eb;
+  --color-border-strong: #d1d5db;
+  --color-text: #24292f;
+  --color-text-muted: #57606a;
+  --color-text-faint: #8c959f;
+  --color-accent: #0969da;
+  --color-accent-hover: #0860c4;
 }
 
 html,
@@ -39,6 +66,6 @@ body {
 }
 
 ::selection {
-  background-color: #3e4451;
-  color: #ffffff;
+  background-color: var(--color-accent);
+  color: white;
 }

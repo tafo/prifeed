@@ -1,4 +1,5 @@
 import { Logo } from '@renderer/components/Logo'
+import { ThemeToggle } from '@renderer/components/ThemeToggle'
 import type { Filter } from '@renderer/lib/time'
 
 interface Counts {
@@ -76,8 +77,9 @@ export function Sidebar({
         />
       </nav>
 
-      <div className="mt-auto px-4 py-3 font-mono text-[11px] text-text-faint">
-        local · private
+      <div className="mt-auto flex items-center justify-between gap-2 px-3 py-3">
+        <span className="font-mono text-[11px] text-text-faint">local · private</span>
+        <ThemeToggle />
       </div>
     </aside>
   )

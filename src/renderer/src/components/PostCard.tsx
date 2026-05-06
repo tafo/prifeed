@@ -14,8 +14,6 @@ export function PostCard({ post, onChange }: PostCardProps): React.JSX.Element {
   const [composing, setComposing] = useState(false)
   const [commentDraft, setCommentDraft] = useState('')
 
-  const wasEdited = post.updated_at > post.created_at
-
   function startEdit(): void {
     setEditing(true)
     setEditBody(post.body)
@@ -85,16 +83,12 @@ export function PostCard({ post, onChange }: PostCardProps): React.JSX.Element {
 
   return (
     <article className="overflow-hidden rounded-md border border-border bg-surface px-5 py-4">
-      <div className="mb-2 flex items-baseline gap-2">
-        <span className="font-mono text-[11px] text-text-faint">
-          {formatTime(post.created_at)}
-        </span>
-        {wasEdited && (
-          <span
-            className="font-mono text-[11px] text-text-faint"
-            title={`Edited ${formatTime(post.updated_at)}`}
-          >
-            · edited
+      <div className="mb-2 flex items-baseline gap-2 text-[11px] text-text-faint">
+        <span className="font-mono">{formatTime(post.created_at)}</span>
+        {post.comments.length > 0 && (
+          <span>
+            · {post.comments.length}{' '}
+            {post.comments.length === 1 ? 'comment' : 'comments'}
           </span>
         )}
       </div>
@@ -137,14 +131,8 @@ export function PostCard({ post, onChange }: PostCardProps): React.JSX.Element {
             {post.body}
           </p>
           <div className="mt-3 flex gap-4 text-[12px] text-text-muted">
-            <button className="hover:text-accent">Like</button>
             <button onClick={startCompose} className="hover:text-accent">
               Comment
-              {post.comments.length > 0 && (
-                <span className="ml-1 font-mono text-text-faint">
-                  · {post.comments.length}
-                </span>
-              )}
             </button>
             <button onClick={startEdit} className="hover:text-accent">
               Edit
