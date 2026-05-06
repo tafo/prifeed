@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Textarea } from '@headlessui/react'
 import type { Comment } from '@renderer/types'
 import { formatTime } from '@renderer/lib/time'
 
@@ -52,7 +53,7 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
   if (editing) {
     return (
       <div>
-        <textarea
+        <Textarea
           autoFocus
           value={editBody}
           onChange={(e) => setEditBody(e.target.value)}

@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { Textarea } from '@headlessui/react'
 
 interface PostComposerProps {
   onPosted: () => void
@@ -33,7 +34,7 @@ export function PostComposer({ onPosted }: PostComposerProps): React.JSX.Element
   return (
     <section className="mb-6">
       <div className="rounded-md border border-border bg-surface transition-colors focus-within:border-border-strong">
-        <textarea
+        <Textarea
           ref={textareaRef}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}

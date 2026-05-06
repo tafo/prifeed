@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { Menu, MenuButton, MenuItem, MenuItems, Textarea } from '@headlessui/react'
 import type { PostWithComments } from '@renderer/types'
 import { formatTime } from '@renderer/lib/time'
 import { CommentItem } from '@renderer/components/CommentItem'
@@ -176,7 +176,7 @@ export function PostCard({ post, onChange }: PostCardProps): React.JSX.Element {
 
       {editing ? (
         <>
-          <textarea
+          <Textarea
             autoFocus
             value={editBody}
             onChange={(e) => setEditBody(e.target.value)}
@@ -223,7 +223,7 @@ export function PostCard({ post, onChange }: PostCardProps): React.JSX.Element {
               )}
               {composing && (
                 <div className={post.comments.length > 0 ? 'mt-3' : ''}>
-                  <textarea
+                  <Textarea
                     autoFocus
                     value={commentDraft}
                     onChange={(e) => setCommentDraft(e.target.value)}
