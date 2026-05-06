@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { initDb, createPost, listPosts } from './db'
 
 function createWindow(): void {
   // Create the browser window.
@@ -49,8 +50,10 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
+  initDb()
+
+  ipcMain.handle('posts:create', (_, body: string) => createPost(body))
+  ipcMain.handle('posts:list', () => listPosts())
 
   createWindow()
 

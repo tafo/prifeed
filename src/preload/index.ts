@@ -1,12 +1,22 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-// Custom APIs for renderer
-const api = {}
+export interface Post {
+  id: string
+  body: string
+  created_at: number
+  updated_at: number
+}
 
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
+const api = {
+  posts: {
+    create: (body: string): Promise<Post> => ipcRenderer.invoke('posts:create', body),
+    list: (): Promise<Post[]> => ipcRenderer.invoke('posts:list')
+  }
+}
+
+export type Api = typeof api
+
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
