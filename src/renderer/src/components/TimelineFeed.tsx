@@ -1,5 +1,6 @@
 import type { PostWithComments } from '@renderer/types'
 import { formatClock, groupByDay } from '@renderer/lib/time'
+import { Markdown } from '@renderer/components/Markdown'
 
 interface TimelineFeedProps {
   posts: PostWithComments[]
@@ -41,9 +42,9 @@ export function TimelineFeed({
                     <span className="w-12 shrink-0 pt-0.5 font-mono text-[13px] text-text-faint">
                       {formatClock(post.created_at)}
                     </span>
-                    <p className="min-w-0 flex-1 whitespace-pre-wrap text-[14px] leading-relaxed text-text">
+                    <Markdown className="min-w-0 flex-1 text-[14px] leading-relaxed text-text">
                       {post.body}
-                    </p>
+                    </Markdown>
                   </div>
                 </div>
               )
