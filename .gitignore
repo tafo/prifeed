@@ -7,3 +7,5 @@ out
 CLAUDE.md
 CLAUDE.local.md
 backup/
+.claude/skills/language/
+.claude/settings.local.json
