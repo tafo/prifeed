@@ -75,24 +75,26 @@ export function TimelineFeed({
             <div className="flex-1 border-t border-border" />
           </div>
           <div>
-            {group.items.map((post) => {
+            {group.items.map((post, i) => {
               const selected = selectedId === post.id
               return (
-                <div
-                  key={post.id}
-                  onClick={() => onSelect(post.id)}
-                  className={`flex cursor-pointer items-start gap-4 border-l-4 px-4 py-3 transition-colors ${
-                    selected
-                      ? 'border-accent bg-elevated'
-                      : 'border-transparent hover:border-emerald-400'
-                  }`}
-                >
-                  <span className="w-12 shrink-0 pt-0.5 font-mono text-[13px] text-text-faint">
-                    {formatTime(post.created_at)}
-                  </span>
-                  <p className="min-w-0 flex-1 whitespace-pre-wrap text-[15px] leading-relaxed text-text">
-                    {post.body}
-                  </p>
+                <div key={post.id}>
+                  {i > 0 && <div className="ml-4 h-px bg-border" />}
+                  <div
+                    onClick={() => onSelect(post.id)}
+                    className={`flex cursor-pointer items-start gap-4 border-l-4 px-4 py-3 transition-colors ${
+                      selected
+                        ? 'border-accent bg-elevated'
+                        : 'border-transparent hover:border-emerald-400'
+                    }`}
+                  >
+                    <span className="w-12 shrink-0 pt-0.5 font-mono text-[13px] text-text-faint">
+                      {formatTime(post.created_at)}
+                    </span>
+                    <p className="min-w-0 flex-1 whitespace-pre-wrap text-[14px] leading-relaxed text-text">
+                      {post.body}
+                    </p>
+                  </div>
                 </div>
               )
             })}
