@@ -4,6 +4,12 @@
   <h1>Prifeed</h1>
 
   <p><strong>A local-first, private journal feed. Your thoughts, your machine, your timeline.</strong></p>
+
+  <p>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue.svg" alt="License: AGPL-3.0" /></a>
+    <a href="https://www.electronjs.org/"><img src="https://img.shields.io/badge/Electron-39-47848F?logo=electron&logoColor=white" alt="Electron 39" /></a>
+    <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript" /></a>
+  </p>
 </div>
 
 ---
