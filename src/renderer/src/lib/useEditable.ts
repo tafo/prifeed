@@ -11,6 +11,38 @@ interface UseEditableResult {
   canSave: boolean
 }
 
+/**
+ * React hook for inline editing of a text value.
+ *
+ * The hook manages an `editing` flag and a `draft` string. It saves on
+ * Cmd/Ctrl+Enter and cancels on Escape. It skips the save when the draft is
+ * empty or unchanged.
+ *
+ * Pass `resetKey` to cancel edit mode when the underlying item changes. For
+ * example, `ThreadPanel` passes `post.id` so that edit mode cancels when the
+ * user picks a different post.
+ *
+ * @param initial   The current value. Used as the start point of the draft.
+ * @param onSave    Runs with the trimmed draft when the user saves.
+ * @param resetKey  Optional. Edit mode cancels when this value changes.
+ *
+ * @example
+ * const editor = useEditable(post.body, async (next) => {
+ *   await window.api.posts.update(post.id, next)
+ *   refresh()
+ * }, post.id)
+ *
+ * if (editor.editing) {
+ *   return (
+ *     <textarea
+ *       value={editor.draft}
+ *       onChange={(e) => editor.setDraft(e.target.value)}
+ *       onKeyDown={editor.handleKeyDown}
+ *     />
+ *   )
+ * }
+ * return <p onClick={editor.start}>{post.body}</p>
+ */
 export function useEditable(
   initial: string,
   onSave: (next: string) => Promise<void> | void,

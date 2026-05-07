@@ -1,3 +1,18 @@
+/**
+ * Local SQLite database for Prifeed.
+ *
+ * The data file lives at `app.getPath('userData')/prifeed.db`. The DB uses
+ * WAL mode for better write concurrency. Foreign keys are on.
+ *
+ * Schema version 2:
+ *   posts     (id, body, created_at, updated_at)
+ *   comments  (id, post_id -> posts.id ON DELETE CASCADE, body, created_at, updated_at)
+ *
+ * The `user_version` PRAGMA tracks migrations. To add a schema change, add a
+ * new `if (version < N)` block to `migrate()` and bump the pragma at the end
+ * of the block. Do not edit a past block.
+ */
+
 import Database from 'better-sqlite3'
 import { app } from 'electron'
 import { join } from 'path'
@@ -5,6 +20,11 @@ import { randomUUID } from 'crypto'
 
 let db: Database.Database
 
+/**
+ * Open the SQLite file and apply pending migrations.
+ *
+ * Call once on app start, before any other DB operation.
+ */
 export function initDb(): void {
   const dbPath = join(app.getPath('userData'), 'prifeed.db')
   db = new Database(dbPath)
@@ -63,6 +83,9 @@ export interface PostWithComments extends Post {
   comments: Comment[]
 }
 
+/**
+ * Insert a new post. Returns the created row.
+ */
 export function createPost(body: string): Post {
   const now = Date.now()
   const post: Post = {
@@ -77,6 +100,12 @@ export function createPost(body: string): Post {
   return post
 }
 
+/**
+ * List all posts with their comments embedded.
+ *
+ * Posts are ordered newest first. Comments inside each post are also newest
+ * first.
+ */
 export function listPosts(): PostWithComments[] {
   const posts = db
     .prepare('SELECT * FROM posts ORDER BY created_at DESC')
@@ -93,14 +122,23 @@ export function listPosts(): PostWithComments[] {
   return posts.map((p) => ({ ...p, comments: byPost.get(p.id) ?? [] }))
 }
 
+/**
+ * Delete a post by id. The cascade removes the post's comments.
+ */
 export function deletePost(id: string): void {
   db.prepare('DELETE FROM posts WHERE id = ?').run(id)
 }
 
+/**
+ * Update the body of a post. Sets `updated_at` to now.
+ */
 export function updatePost(id: string, body: string): void {
   db.prepare('UPDATE posts SET body = ?, updated_at = ? WHERE id = ?').run(body, Date.now(), id)
 }
 
+/**
+ * Insert a new comment on a post. Returns the created row.
+ */
 export function createComment(postId: string, body: string): Comment {
   const now = Date.now()
   const comment: Comment = {
@@ -116,10 +154,16 @@ export function createComment(postId: string, body: string): Comment {
   return comment
 }
 
+/**
+ * Delete a comment by id.
+ */
 export function deleteComment(id: string): void {
   db.prepare('DELETE FROM comments WHERE id = ?').run(id)
 }
 
+/**
+ * Update the body of a comment. Sets `updated_at` to now.
+ */
 export function updateComment(id: string, body: string): void {
   db.prepare('UPDATE comments SET body = ?, updated_at = ? WHERE id = ?').run(
     body,

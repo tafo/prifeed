@@ -7,7 +7,6 @@
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, monospace;
 
-  /* Defaults — overridden at runtime by .light or .dark on <html> (Phoenix dark) */
   --color-bg: #0f111a;
   --color-surface: #141824;
   --color-elevated: #222834;
@@ -76,7 +75,6 @@ body {
   color: white;
 }
 
-/* Slim, theme-aware scrollbars */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border) transparent;
