@@ -160,9 +160,12 @@ export function ThreadPanel({
             )}
 
             {post.comments.length > 0 && (
-              <div className="mt-5 space-y-3">
-                {post.comments.map((c) => (
-                  <CommentItem key={c.id} comment={c} onChange={onChange} />
+              <div className="mt-5">
+                {post.comments.map((c, i) => (
+                  <div key={c.id}>
+                    {i > 0 && <div className="my-3 ml-3.5 h-px bg-border" />}
+                    <CommentItem comment={c} onChange={onChange} />
+                  </div>
                 ))}
               </div>
             )}
