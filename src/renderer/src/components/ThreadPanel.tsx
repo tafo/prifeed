@@ -1,14 +1,11 @@
-import { useEffect, useState } from 'react'
-import { Menu, MenuButton, MenuItem, MenuItems, Textarea } from '@headlessui/react'
-import {
-  EllipsisHorizontalIcon,
-  PencilIcon,
-  TrashIcon,
-  XMarkIcon
-} from '@heroicons/react/16/solid'
+import { useState } from 'react'
+import { Textarea } from '@headlessui/react'
+import { PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/16/solid'
 import type { PostWithComments } from '@renderer/types'
+import { useEditable } from '@renderer/lib/useEditable'
 import { CommentItem } from '@renderer/components/CommentItem'
 import { ConfirmDialog } from '@renderer/components/ConfirmDialog'
+import { KebabMenu } from '@renderer/components/KebabMenu'
 
 interface ThreadPanelProps {
   post: PostWithComments
@@ -21,56 +18,23 @@ export function ThreadPanel({
   onChange,
   onClose
 }: ThreadPanelProps): React.JSX.Element {
-  const [editing, setEditing] = useState(false)
-  const [editBody, setEditBody] = useState('')
   const [commentDraft, setCommentDraft] = useState('')
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
-  // Reset edit state when switching posts
-  useEffect(() => {
-    setEditing(false)
-    setEditBody('')
-  }, [post.id])
-
-  function startEdit(): void {
-    setEditing(true)
-    setEditBody(post.body)
-  }
-
-  function cancelEdit(): void {
-    setEditing(false)
-    setEditBody('')
-  }
-
-  async function saveEdit(): Promise<void> {
-    const body = editBody.trim()
-    if (!body || body === post.body) {
-      cancelEdit()
-      return
-    }
-    await window.api.posts.update(post.id, body)
-    cancelEdit()
-    onChange()
-  }
-
-  function handleEditKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>): void {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-      e.preventDefault()
-      saveEdit()
-    } else if (e.key === 'Escape') {
-      e.preventDefault()
-      cancelEdit()
-    }
-  }
+  const { editing, draft, setDraft, start, cancel, save, handleKeyDown, canSave } = useEditable(
+    post.body,
+    async (next) => {
+      await window.api.posts.update(post.id, next)
+      onChange()
+    },
+    post.id
+  )
 
   async function performDelete(): Promise<void> {
     await window.api.posts.delete(post.id)
     setConfirmingDelete(false)
     onChange()
   }
-
-  const deletePreview =
-    post.body.length > 80 ? post.body.slice(0, 80) + '...' : post.body
 
   async function submitComment(): Promise<void> {
     const body = commentDraft.trim()
@@ -86,6 +50,9 @@ export function ThreadPanel({
       submitComment()
     }
   }
+
+  const deletePreview =
+    post.body.length > 80 ? post.body.slice(0, 80) + '...' : post.body
 
   return (
     <aside className="flex w-[42rem] shrink-0 flex-col border-l border-border bg-surface">
@@ -104,39 +71,17 @@ export function ThreadPanel({
         </div>
         <div className="flex items-center gap-1">
           {!editing && (
-            <Menu>
-              <MenuButton
-                title="More"
-                aria-label="More actions"
-                className="rounded p-1 text-text-muted hover:bg-elevated hover:text-text data-open:bg-elevated data-open:text-text"
-              >
-                <EllipsisHorizontalIcon className="size-4" />
-              </MenuButton>
-              <MenuItems
-                transition
-                anchor="bottom end"
-                className="z-20 w-40 origin-top-right rounded-xl border border-border bg-elevated p-1 text-[13px] text-text shadow-xl transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
-              >
-                <MenuItem>
-                  <button
-                    onClick={startEdit}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left data-focus:bg-border-strong"
-                  >
-                    <PencilIcon className="size-4 text-text-muted" />
-                    Edit
-                  </button>
-                </MenuItem>
-                <MenuItem>
-                  <button
-                    onClick={() => setConfirmingDelete(true)}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left data-focus:bg-border-strong data-focus:text-red-400"
-                  >
-                    <TrashIcon className="size-4 text-text-muted" />
-                    Delete
-                  </button>
-                </MenuItem>
-              </MenuItems>
-            </Menu>
+            <KebabMenu
+              items={[
+                { label: 'Edit', icon: PencilIcon, onClick: start },
+                {
+                  label: 'Delete',
+                  icon: TrashIcon,
+                  onClick: () => setConfirmingDelete(true),
+                  destructive: true
+                }
+              ]}
+            />
           )}
           <button
             onClick={onClose}
@@ -154,10 +99,10 @@ export function ThreadPanel({
             <Textarea
               autoFocus
               aria-label="Edit post body"
-              value={editBody}
-              onChange={(e) => setEditBody(e.target.value)}
-              onKeyDown={handleEditKeyDown}
-              rows={Math.max(3, editBody.split('\n').length)}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={handleKeyDown}
+              rows={3}
               spellCheck={false}
               className="w-full resize-none rounded-lg border-none bg-elevated px-3 py-2 text-[15px] leading-relaxed text-text field-sizing-content focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-focus-ring"
             />
@@ -167,14 +112,14 @@ export function ThreadPanel({
               </span>
               <div className="flex gap-2">
                 <button
-                  onClick={cancelEdit}
+                  onClick={cancel}
                   className="rounded-md px-3 py-1 text-xs font-medium text-text-muted hover:text-text"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={saveEdit}
-                  disabled={!editBody.trim() || editBody.trim() === post.body}
+                  onClick={save}
+                  disabled={!canSave}
                   className="rounded-md bg-accent px-3 py-1 text-xs font-semibold text-white shadow-inner shadow-white/15 transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   Save

@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import { Menu, MenuButton, MenuItem, MenuItems, Textarea } from '@headlessui/react'
-import {
-  EllipsisHorizontalIcon,
-  PencilIcon,
-  TrashIcon
-} from '@heroicons/react/16/solid'
+import { Textarea } from '@headlessui/react'
+import { PencilIcon, TrashIcon } from '@heroicons/react/16/solid'
 import type { Comment } from '@renderer/types'
 import { formatTime } from '@renderer/lib/time'
+import { useEditable } from '@renderer/lib/useEditable'
+import { KebabMenu } from '@renderer/components/KebabMenu'
 import { ConfirmDialog } from '@renderer/components/ConfirmDialog'
 
 interface CommentItemProps {
@@ -15,45 +13,20 @@ interface CommentItemProps {
 }
 
 export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.Element {
-  const [editing, setEditing] = useState(false)
-  const [editBody, setEditBody] = useState('')
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
-  function startEdit(): void {
-    setEditing(true)
-    setEditBody(comment.body)
-  }
-
-  function cancelEdit(): void {
-    setEditing(false)
-    setEditBody('')
-  }
-
-  async function saveEdit(): Promise<void> {
-    const body = editBody.trim()
-    if (!body || body === comment.body) {
-      cancelEdit()
-      return
+  const { editing, draft, setDraft, start, cancel, save, handleKeyDown, canSave } = useEditable(
+    comment.body,
+    async (next) => {
+      await window.api.comments.update(comment.id, next)
+      onChange()
     }
-    await window.api.comments.update(comment.id, body)
-    cancelEdit()
-    onChange()
-  }
+  )
 
   async function performDelete(): Promise<void> {
     await window.api.comments.delete(comment.id)
     setConfirmingDelete(false)
     onChange()
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>): void {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-      e.preventDefault()
-      saveEdit()
-    } else if (e.key === 'Escape') {
-      e.preventDefault()
-      cancelEdit()
-    }
   }
 
   if (editing) {
@@ -62,22 +35,22 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
         <Textarea
           autoFocus
           aria-label="Edit comment body"
-          value={editBody}
-          onChange={(e) => setEditBody(e.target.value)}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
           onKeyDown={handleKeyDown}
-          rows={Math.max(2, editBody.split('\n').length)}
+          rows={2}
           spellCheck={false}
           className="w-full resize-none rounded-2xl border-none bg-surface px-3.5 py-2 text-[14px] leading-snug text-text field-sizing-content focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-focus-ring"
         />
         <div className="mt-1 ml-3.5 flex items-center justify-between text-[11px] text-text-faint">
           <span className="font-mono">⌘ + Enter · Esc</span>
           <div className="flex items-center gap-2">
-            <button onClick={cancelEdit} className="text-text-muted hover:text-text">
+            <button onClick={cancel} className="text-text-muted hover:text-text">
               Cancel
             </button>
             <button
-              onClick={saveEdit}
-              disabled={!editBody.trim() || editBody.trim() === comment.body}
+              onClick={save}
+              disabled={!canSave}
               className="rounded bg-accent px-2 py-0.5 text-[11px] font-semibold text-white shadow-inner shadow-white/15 hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-30"
             >
               Save
@@ -101,39 +74,17 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
         <span className="font-mono text-[11px] whitespace-nowrap text-text-faint">
           {formatTime(comment.created_at)}
         </span>
-        <Menu>
-          <MenuButton
-            title="More"
-            aria-label="More actions"
-            className="rounded p-0.5 text-text-muted opacity-40 transition-opacity hover:bg-elevated hover:text-text data-open:bg-elevated data-open:text-text data-open:opacity-100"
-          >
-            <EllipsisHorizontalIcon className="size-4" />
-          </MenuButton>
-          <MenuItems
-            transition
-            anchor="bottom end"
-            className="z-20 w-40 origin-top-right rounded-xl border border-border bg-elevated p-1 text-[13px] text-text shadow-xl transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
-          >
-            <MenuItem>
-              <button
-                onClick={startEdit}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left data-focus:bg-border-strong"
-              >
-                <PencilIcon className="size-4 text-text-muted" />
-                Edit
-              </button>
-            </MenuItem>
-            <MenuItem>
-              <button
-                onClick={() => setConfirmingDelete(true)}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left data-focus:bg-border-strong data-focus:text-red-400"
-              >
-                <TrashIcon className="size-4 text-text-muted" />
-                Delete
-              </button>
-            </MenuItem>
-          </MenuItems>
-        </Menu>
+        <KebabMenu
+          items={[
+            { label: 'Edit', icon: PencilIcon, onClick: start },
+            {
+              label: 'Delete',
+              icon: TrashIcon,
+              onClick: () => setConfirmingDelete(true),
+              destructive: true
+            }
+          ]}
+        />
       </div>
 
       <ConfirmDialog
