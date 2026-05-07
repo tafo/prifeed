@@ -6,6 +6,7 @@ import { useEditable } from '@renderer/lib/useEditable'
 import { CommentItem } from '@renderer/components/CommentItem'
 import { ConfirmDialog } from '@renderer/components/ConfirmDialog'
 import { KebabMenu } from '@renderer/components/KebabMenu'
+import { Markdown } from '@renderer/components/Markdown'
 
 interface ThreadPanelProps {
   post: PostWithComments
@@ -128,9 +129,9 @@ export function ThreadPanel({
             </div>
           </>
         ) : (
-          <p className="mb-5 whitespace-pre-wrap text-[15px] leading-relaxed text-text">
+          <Markdown className="mb-5 text-[15px] leading-relaxed text-text">
             {post.body}
-          </p>
+          </Markdown>
         )}
 
         {!editing && (

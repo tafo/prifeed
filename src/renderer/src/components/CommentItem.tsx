@@ -6,6 +6,7 @@ import { formatTime } from '@renderer/lib/time'
 import { useEditable } from '@renderer/lib/useEditable'
 import { KebabMenu } from '@renderer/components/KebabMenu'
 import { ConfirmDialog } from '@renderer/components/ConfirmDialog'
+import { Markdown } from '@renderer/components/Markdown'
 
 interface CommentItemProps {
   comment: Comment
@@ -65,9 +66,9 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
     <div className="group/comment flex items-start gap-2">
       <div className="min-w-0 flex-1">
         <div className="inline-block max-w-full rounded-2xl bg-surface px-3.5 py-2">
-          <p className="whitespace-pre-wrap text-[14px] leading-snug text-text">
+          <Markdown className="text-[14px] leading-snug text-text">
             {comment.body}
-          </p>
+          </Markdown>
         </div>
       </div>
       <div className="flex shrink-0 items-start gap-1 pt-1.5">
