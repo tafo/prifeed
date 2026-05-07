@@ -8,6 +8,7 @@ import {
 } from '@heroicons/react/16/solid'
 import type { PostWithComments } from '@renderer/types'
 import { CommentItem } from '@renderer/components/CommentItem'
+import { ConfirmDialog } from '@renderer/components/ConfirmDialog'
 
 interface ThreadPanelProps {
   post: PostWithComments
@@ -23,6 +24,7 @@ export function ThreadPanel({
   const [editing, setEditing] = useState(false)
   const [editBody, setEditBody] = useState('')
   const [commentDraft, setCommentDraft] = useState('')
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   // Reset edit state when switching posts
   useEffect(() => {
@@ -61,13 +63,14 @@ export function ThreadPanel({
     }
   }
 
-  async function handleDelete(): Promise<void> {
-    const preview = post.body.length > 60 ? post.body.slice(0, 60) + '...' : post.body
-    const ok = window.confirm(`Delete this entry?\n\n"${preview}"\n\nThis cannot be undone.`)
-    if (!ok) return
+  async function performDelete(): Promise<void> {
     await window.api.posts.delete(post.id)
+    setConfirmingDelete(false)
     onChange()
   }
+
+  const deletePreview =
+    post.body.length > 80 ? post.body.slice(0, 80) + '...' : post.body
 
   async function submitComment(): Promise<void> {
     const body = commentDraft.trim()
@@ -125,7 +128,7 @@ export function ThreadPanel({
                 </MenuItem>
                 <MenuItem>
                   <button
-                    onClick={handleDelete}
+                    onClick={() => setConfirmingDelete(true)}
                     className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left data-focus:bg-border-strong data-focus:text-red-400"
                   >
                     <TrashIcon className="size-4 text-text-muted" />
@@ -221,6 +224,16 @@ export function ThreadPanel({
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title="Delete this entry?"
+        message={`"${deletePreview}"\n\nThis cannot be undone.`}
+        confirmLabel="Delete"
+        destructive
+        onConfirm={performDelete}
+        onClose={() => setConfirmingDelete(false)}
+      />
     </aside>
   )
 }

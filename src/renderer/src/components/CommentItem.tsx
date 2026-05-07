@@ -7,6 +7,7 @@ import {
 } from '@heroicons/react/16/solid'
 import type { Comment } from '@renderer/types'
 import { formatTime } from '@renderer/lib/time'
+import { ConfirmDialog } from '@renderer/components/ConfirmDialog'
 
 interface CommentItemProps {
   comment: Comment
@@ -16,6 +17,7 @@ interface CommentItemProps {
 export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.Element {
   const [editing, setEditing] = useState(false)
   const [editBody, setEditBody] = useState('')
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   function startEdit(): void {
     setEditing(true)
@@ -38,10 +40,9 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
     onChange()
   }
 
-  async function handleDelete(): Promise<void> {
-    const ok = window.confirm('Delete this comment?')
-    if (!ok) return
+  async function performDelete(): Promise<void> {
     await window.api.comments.delete(comment.id)
+    setConfirmingDelete(false)
     onChange()
   }
 
@@ -124,7 +125,7 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
             </MenuItem>
             <MenuItem>
               <button
-                onClick={handleDelete}
+                onClick={() => setConfirmingDelete(true)}
                 className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left data-focus:bg-border-strong data-focus:text-red-400"
               >
                 <TrashIcon className="size-4 text-text-muted" />
@@ -134,6 +135,16 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
           </MenuItems>
         </Menu>
       </div>
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title="Delete this comment?"
+        message="This cannot be undone."
+        confirmLabel="Delete"
+        destructive
+        onConfirm={performDelete}
+        onClose={() => setConfirmingDelete(false)}
+      />
     </div>
   )
 }
