@@ -47,7 +47,7 @@ export function Sidebar({
   onNewEntry
 }: SidebarProps): React.JSX.Element {
   return (
-    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-border bg-bg">
+    <aside className="flex w-60 shrink-0 flex-col border-r border-border bg-bg">
       <div className="flex items-center gap-2.5 px-4 py-4">
         <Logo />
         <span className="text-base font-semibold text-text">Prifeed</span>

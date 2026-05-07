@@ -62,7 +62,7 @@ export function ComposeModal({
             placeholder="What's on your mind?"
             rows={6}
             spellCheck={false}
-            className="w-full resize-none rounded-lg border-none bg-elevated px-3 py-2 text-[15px] leading-relaxed text-text placeholder:text-text-faint focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-focus-ring"
+            className="w-full resize-none rounded-lg border-none bg-elevated px-3 py-2 text-[15px] leading-relaxed text-text field-sizing-content placeholder:text-text-faint focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-focus-ring"
           />
           <div className="mt-3 flex items-center justify-between">
             <span className="font-mono text-[11px] text-text-faint">

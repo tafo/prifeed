@@ -7,7 +7,6 @@ import {
   XMarkIcon
 } from '@heroicons/react/16/solid'
 import type { PostWithComments } from '@renderer/types'
-import { formatTime } from '@renderer/lib/time'
 import { CommentItem } from '@renderer/components/CommentItem'
 
 interface ThreadPanelProps {
@@ -86,18 +85,15 @@ export function ThreadPanel({
   }
 
   return (
-    <aside className="sticky top-0 flex h-screen w-[42rem] shrink-0 flex-col border-l border-border bg-surface">
+    <aside className="flex w-[42rem] shrink-0 flex-col border-l border-border bg-surface">
       <header className="flex items-center justify-between gap-2 border-b border-border px-5 py-3">
         <div className="flex items-center gap-2 text-[11px] text-text-faint">
-          <span className="font-mono whitespace-nowrap">
-            {formatTime(post.created_at)}
-          </span>
           {post.comments.length > 0 && (
             <span
               title={`${post.comments.length} ${
                 post.comments.length === 1 ? 'comment' : 'comments'
               }`}
-              className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-semibold text-white"
+              className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-elevated px-1 text-[10px] font-semibold text-text-muted"
             >
               {post.comments.length}
             </span>
@@ -160,7 +156,7 @@ export function ThreadPanel({
               onKeyDown={handleEditKeyDown}
               rows={Math.max(3, editBody.split('\n').length)}
               spellCheck={false}
-              className="w-full resize-none rounded-lg border-none bg-elevated px-3 py-2 text-[15px] leading-relaxed text-text focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-focus-ring"
+              className="w-full resize-none rounded-lg border-none bg-elevated px-3 py-2 text-[15px] leading-relaxed text-text field-sizing-content focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-focus-ring"
             />
             <div className="mt-2 flex items-center justify-between">
               <span className="font-mono text-[11px] text-text-faint">
@@ -199,7 +195,7 @@ export function ThreadPanel({
               placeholder="Add a comment..."
               rows={2}
               spellCheck={false}
-              className="w-full resize-none rounded-lg border-none bg-elevated px-3 py-2 text-[14px] leading-relaxed text-text placeholder:text-text-faint focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-focus-ring"
+              className="w-full resize-none rounded-lg border-none bg-elevated px-3 py-2 text-[14px] leading-relaxed text-text field-sizing-content placeholder:text-text-faint focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-focus-ring"
             />
             {commentDraft.trim() && (
               <div className="mt-2 flex items-center justify-between">

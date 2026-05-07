@@ -8,7 +8,11 @@ export function formatTime(ts: number): string {
     d.getMonth() === now.getMonth() &&
     d.getDate() === now.getDate()
   if (sameDay) {
-    return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
+    return d.toLocaleTimeString(undefined, {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    })
   }
   const sameYear = d.getFullYear() === now.getFullYear()
   return d.toLocaleDateString(undefined, {
@@ -16,7 +20,8 @@ export function formatTime(ts: number): string {
     day: 'numeric',
     ...(sameYear ? {} : { year: 'numeric' }),
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
+    hour12: false
   })
 }
 

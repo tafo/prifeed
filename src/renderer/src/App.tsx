@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { PostWithComments } from '@renderer/types'
 import { type Filter, getFilterCutoff } from '@renderer/lib/time'
 import { Sidebar } from '@renderer/components/Sidebar'
-import { PostCard } from '@renderer/components/PostCard'
+import { TimelineFeed } from '@renderer/components/TimelineFeed'
 import { ThreadPanel } from '@renderer/components/ThreadPanel'
 import { ComposeModal } from '@renderer/components/ComposeModal'
 
@@ -68,7 +68,7 @@ function App(): React.JSX.Element {
   )
 
   return (
-    <div className="flex min-h-screen bg-bg">
+    <div className="flex h-screen bg-bg">
       <Sidebar
         filter={filter}
         counts={counts}
@@ -76,23 +76,19 @@ function App(): React.JSX.Element {
         onNewEntry={() => setComposerOpen(true)}
       />
 
-      <main className="min-w-0 flex-1 bg-bg">
-        <div className="mx-auto max-w-3xl px-6 py-10">
-          <section className="space-y-3">
-            {visiblePosts.length === 0 && (
-              <p className="py-8 text-center text-sm text-text-faint">
-                {posts.length === 0 ? 'No entries yet.' : 'Nothing in this range.'}
-              </p>
-            )}
-            {visiblePosts.map((post) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                selected={selectedId === post.id}
-                onSelect={setSelectedId}
-              />
-            ))}
-          </section>
+      <main className="min-w-0 flex-1 overflow-y-auto bg-bg">
+        <div className="px-6 py-10">
+          {visiblePosts.length === 0 ? (
+            <p className="mx-auto max-w-3xl py-8 text-center text-sm text-text-faint">
+              {posts.length === 0 ? 'No entries yet.' : 'Nothing in this range.'}
+            </p>
+          ) : (
+            <TimelineFeed
+              posts={visiblePosts}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+            />
+          )}
         </div>
       </main>
 

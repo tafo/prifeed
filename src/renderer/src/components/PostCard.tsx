@@ -10,7 +10,7 @@ export function PostCard({ post, selected, onSelect }: PostCardProps): React.JSX
   return (
     <article
       onClick={() => onSelect(post.id)}
-      className={`cursor-pointer overflow-hidden rounded-xl border bg-surface px-5 py-4 transition-colors ${
+      className={`cursor-pointer rounded-xl border bg-surface px-4 py-3 transition-colors ${
         selected ? 'border-accent' : 'border-border hover:border-border-strong'
       }`}
     >

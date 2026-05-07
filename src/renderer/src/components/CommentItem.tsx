@@ -66,7 +66,7 @@ export function CommentItem({ comment, onChange }: CommentItemProps): React.JSX.
           onKeyDown={handleKeyDown}
           rows={Math.max(2, editBody.split('\n').length)}
           spellCheck={false}
-          className="w-full resize-none rounded-2xl border-none bg-surface px-3.5 py-2 text-[14px] leading-snug text-text focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-focus-ring"
+          className="w-full resize-none rounded-2xl border-none bg-surface px-3.5 py-2 text-[14px] leading-snug text-text field-sizing-content focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-focus-ring"
         />
         <div className="mt-1 ml-3.5 flex items-center justify-between text-[11px] text-text-faint">
           <span className="font-mono">⌘ + Enter · Esc</span>
